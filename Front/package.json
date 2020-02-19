@@ -1,5 +1,5 @@
 {
-  "name": "Front",
+  "name": "front",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@inlet/react-pixi": "^1.2.0",
+    "pixi.js": "^5.2.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   },
