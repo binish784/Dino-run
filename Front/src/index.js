@@ -1,16 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {createBrowserHistory} from "history";
+import {Router,Route,Switch,withRouter} from "react-router-dom";
 
-import {Stage} from "@inlet/react-pixi";
-import * as PIXI from "pixi.js";
+import DinoApp from "./layout/dino";
 
-const config = require("./config/config");
+let hist=createBrowserHistory();
 
 class App extends React.Component{
+
     render(){
-        return <Stage height={config.height} width={config.width}>
-            
-        </Stage>
+        console.log("App loaded");
+        return (
+            <div>
+                <Router history={hist}>
+                    <Switch>
+                        <Route key={1} path="/" >
+                            <DinoApp />
+                        </Route>
+                    </Switch>
+                </Router>
+            </div>
+        )
     }
 }
 
