@@ -3,6 +3,9 @@ import ReactDOM from "react-dom";
 import {createBrowserHistory} from "history";
 import {Router,Route,Switch,withRouter} from "react-router-dom";
 
+
+import {AppConsumer} from "@inlet/react-pixi";
+
 import DinoApp from "./layout/dino";
 
 let hist=createBrowserHistory();
@@ -16,7 +19,7 @@ class App extends React.Component{
                 <Router history={hist}>
                     <Switch>
                         <Route key={1} path="/" >
-                            <DinoApp />
+                                <DinoApp />}
                         </Route>
                     </Switch>
                 </Router>

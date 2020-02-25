@@ -11,7 +11,7 @@ module.exports={
     module:{
         rules:[
             {
-                test:/\.(js)$/,
+                test:[/\.(js|jsx)$/],
                 loader: 'babel-loader',
                 options: {  
                     presets: [ "@babel/preset-env", "@babel/preset-react" ],
@@ -27,6 +27,9 @@ module.exports={
         new HtmlWebpackPlugin({
             template:"src/index.html"
         })
-    ]    
+    ],
+    devServer:{
+        historyApiFallback:true,    
+        open:true,
+    }
 }
-
