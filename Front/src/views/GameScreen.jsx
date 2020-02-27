@@ -2,13 +2,15 @@
 
 import React from "react";
 
-const config = require("../config/config");
+var config = require("../config/config");
 
 import * as PIXI from "pixi.js";
 
 import Controller from "../controller/controller";
 
+import customText from "../components/customText";
 import Player from "../components/Player";
+import Ground from "../components/Ground";
 import Cactus from "../components/Cactus";
 
 const utils=require("../utils/utils");
@@ -27,12 +29,14 @@ class GameScreen extends React.Component{
 
         //game properties
         this.score=0; // game score
-        this.speed=config.game_speed; // map_speed
-        this.gravity=config.gravity; 
+        this.score_counter=5;
         this.min_gap=350; // minimum gap between the obstacles
+        this.currentState=config.GAME_STATES.PAUSED;
 
         //Player
         this.player=new Player(this.container,100,config.ground_level,40,30);
+
+        this.ground=new Ground(this.container);
 
         //Score
         this.scoreText=new PIXI.Text(`Score : ${this.score}`,{fill:"white",fontSize:15});
@@ -41,18 +45,41 @@ class GameScreen extends React.Component{
         this.container.addChild(this.scoreText);
 
         //Cactus 
-        this.cactusTexture= PIXI.Texture.from("https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/coin.png");
         this.cactus=[];
+
+        //paused Text
+        this.pausedText=new customText(this.container,200,150,"Paused","white",15);
         
         // binding functions
         this.generateCactus=this.generateCactus.bind(this);
         this.updateGame=this.updateGame.bind(this);
         this.checkCollision=this.checkCollision.bind(this);
+        this.togglePause=this.togglePause.bind(this);
 
         //controller
         this.controller=new Controller(this.player);
         
+        //pause Controller
+        document.addEventListener("keypress",(e)=>{
+            if(e.keyCode==112){
+                this.togglePause();
+            }
+        })
+
     }
+
+    togglePause(){
+        if(this.currentState==config.GAME_STATES.PAUSED){
+            this.currentState=config.GAME_STATES.RUNNING;
+            this.app.ticker.remove(this.updateGame);
+            this.pausedText.showText();
+        }else if(this.currentState==config.GAME_STATES.RUNNING){
+            this.currentState=config.GAME_STATES.PAUSED;
+            this.app.ticker.add(this.updateGame);
+            this.pausedText.hideChild();
+        }
+    }
+
 
     componentDidMount(){
         if(this.props.history.action!= "PUSH"){
@@ -60,7 +87,6 @@ class GameScreen extends React.Component{
         }
         this.pxRender.current.appendChild(this.app.view);
         this.generateCactus();
-        this.app.ticker.add(this.updateGame);
     }
 
 
@@ -95,7 +121,7 @@ class GameScreen extends React.Component{
              }
             
             //recycle the cactus once pass the screen
-            if(cactie.body.x<0){
+            if(cactie.body.x + cactie.body.width <0){
                     let prev_post= (i==0) ? this.cactus[this.cactus.length-1].body.x : this.cactus[i-1].body.x;
                     cactie.body.x= utils.getRandomNumber(prev_post+this.min_gap,prev_post+Math.floor(this.min_gap+Math.random()*300));
                     cactie.counted=false;
@@ -104,16 +130,31 @@ class GameScreen extends React.Component{
     }
 
 
-    //keep score count
+    //keep score count and increase speed accordingly
 
     countScore(){
+
+        //count score for jumping
         this.cactus.forEach((cactie)=>{
             if(cactie.body.x<this.player.body.x && !cactie.counted){
                 this.score+=10;
                 cactie.counted=true;
                 this.scoreText.text=(`Score : ${this.score}`);
+            
+                //increase game_speed
+
+                if(this.score%20==0 && config.game_speed!=4){
+                    console.log("increase Game speed")
+                    config.game_speed++;
+                    if(config.game_speed%7==0){
+                        this.min_gap+= (100 * config.game_speed/7 );
+                    }
+                }
+            
             }
         })
+        
+    
     }
 
     //move all the cactus
@@ -128,6 +169,7 @@ class GameScreen extends React.Component{
 
     updateGame(delta){
         this.moveCactus();
+        this.ground.moveGround();   
         this.player.update(delta);
         this.checkCollision();
         this.countScore();

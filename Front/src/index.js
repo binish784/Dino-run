@@ -19,7 +19,7 @@ class App extends React.Component{
                 <Router history={hist}>
                     <Switch>
                         <Route key={1} path="/" >
-                                <DinoApp />}
+                                <DinoApp />
                         </Route>
                     </Switch>
                 </Router>

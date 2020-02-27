@@ -28,16 +28,22 @@ class MenuScreen extends Component{
     render(){
         console.log("Menu Screen loaded");
         return <Stage height={config.height} width={config.width} >
-        <Text text="Bunny Hop" x={150} y={100} style={new TextStyle({
+        <Text text="Bunny Hop" x={250} y={100} style={new TextStyle({
             fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
             align:"center",
             fontSize:20,
             fill:"white",
         })}  />
-        <Text text="Press Enter to start" x={150} y={150} style={new TextStyle({
+        <Text text="Press Enter to start" x={200} y={150} style={new TextStyle({
             align:"center",
             fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
             fontSize:20,
+            fill:"white",
+        })}  />
+        <Text text="'P' to toggle Pause" x={250} y={200} style={new TextStyle({
+            align:"center",
+            fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
+            fontSize:12,
             fill:"white",
         })}  />
         </Stage>
