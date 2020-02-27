@@ -41,7 +41,7 @@ class GameScreen extends React.Component{
 
         //Score
         this.scoreText=new PIXI.Text(`Score : ${this.score}`,{fill:"white",fontSize:15});
-        this.scoreText.x=450;
+        this.scoreText.x=config.width-150;
         this.scoreText.y=10;
         this.container.addChild(this.scoreText);
 
@@ -50,6 +50,10 @@ class GameScreen extends React.Component{
 
         //paused Text
         this.pausedText=new customText(this.container,200,150,"Paused","white",15);
+        
+        //game over Text
+        this.gameOverText=new customText(this.container,200,150,"Game Over","white",15);
+        this.gameOverText.hideText();
         
         // binding functions
         this.generateCactus=this.generateCactus.bind(this);
@@ -116,7 +120,7 @@ class GameScreen extends React.Component{
                 cactie.body.y < this.player.body.y + this.player.body.height &&
                 cactie.body.y + cactie.body.height > this.player.body.y) {
                     this.currentState=config.GAME_STATES.GAMEOVER;
-                    this.app.ticker.remove(this.updateGame);
+                    // this.app.ticker.remove(this.updateGame);
                 }
             
             //recycle the cactus once pass the screen
@@ -168,6 +172,11 @@ class GameScreen extends React.Component{
     updateGame(delta){
 
         if(this.currentState==config.GAME_STATES.PAUSED){
+            return;
+        }
+
+        if(this.currentState==config.GAME_STATES.GAMEOVER){
+            this.gameOverText.showText();
             return;
         }
 
