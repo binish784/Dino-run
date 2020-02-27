@@ -3,8 +3,17 @@ module.exports={
     width:600,
     gravity:1,
     ground_level:200,
+    game_speed:3,
+    player_keys:{
+        JUMP:32,
+    },
     PLAYER_STATES:{
         GROUNDED:1,
         JUMPING:2
+    },
+    GAME_STATES:{
+        RUNNING:1,
+        PAUSED:2,
+        GAMEOVER:3,
     }
 }

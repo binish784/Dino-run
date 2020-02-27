@@ -28,7 +28,7 @@ class MenuScreen extends Component{
     render(){
         console.log("Menu Screen loaded");
         return <Stage height={config.height} width={config.width} >
-        <Text text="Dino Run" x={150} y={100} style={new TextStyle({
+        <Text text="Bunny Hop" x={150} y={100} style={new TextStyle({
             fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
             align:"center",
             fontSize:20,
