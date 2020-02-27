@@ -16,8 +16,8 @@ class Ground{
         
         //sprite properties
         this.tiles=[];
-
-        for(let i=0;i<7;i++){
+        this.tileNum=Math.ceil(config.width / 100)+2;
+        for(let i=0;i<this.tileNum;i++){
             let x= (i==0) ? 0 : this.tiles[i-1].body.x+this.tiles[i-1].body.width;
             let tile=new GroundTile(this.container,x);
             this.tiles.push(tile);

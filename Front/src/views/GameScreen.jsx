@@ -23,6 +23,7 @@ class GameScreen extends React.Component{
 
         //initialize pixi app
         this.app= new PIXI.Application({width:config.width,height:config.height})
+       
         this.pxRender=React.createRef();
         this.container= new PIXI.Container();
         this.app.stage.addChild(this.container);
@@ -66,17 +67,16 @@ class GameScreen extends React.Component{
             }
         })
 
+        this.app.ticker.add(this.updateGame);
     }
 
     togglePause(){
         if(this.currentState==config.GAME_STATES.PAUSED){
             this.currentState=config.GAME_STATES.RUNNING;
-            this.app.ticker.remove(this.updateGame);
-            this.pausedText.showText();
+            this.pausedText.hideText();
         }else if(this.currentState==config.GAME_STATES.RUNNING){
             this.currentState=config.GAME_STATES.PAUSED;
-            this.app.ticker.add(this.updateGame);
-            this.pausedText.hideChild();
+            this.pausedText.showText();
         }
     }
 
@@ -99,9 +99,7 @@ class GameScreen extends React.Component{
             let init_x= (i==0) ? utils.getRandomNumber(300+this.min_gap,500) 
                             : utils.getRandomNumber(this.cactus[i-1].body.x+this.min_gap,this.cactus[i-1].body.x+this.min_gap+(Math.random()*50));
             let init_y=config.ground_level+ 20;
-            
             let cactie= new Cactus(this.container,init_x,init_y,20,20);
-            
             this.cactus.push(cactie);
         }
     }
@@ -117,8 +115,9 @@ class GameScreen extends React.Component{
                 cactie.body.x + cactie.body.width > this.player.body.x &&
                 cactie.body.y < this.player.body.y + this.player.body.height &&
                 cactie.body.y + cactie.body.height > this.player.body.y) {
-                 this.app.ticker.remove(this.updateGame);
-             }
+                    this.currentState=config.GAME_STATES.GAMEOVER;
+                    this.app.ticker.remove(this.updateGame);
+                }
             
             //recycle the cactus once pass the screen
             if(cactie.body.x + cactie.body.width <0){
@@ -142,12 +141,11 @@ class GameScreen extends React.Component{
                 this.scoreText.text=(`Score : ${this.score}`);
             
                 //increase game_speed
-
-                if(this.score%20==0 && config.game_speed!=4){
+                if(this.score%20==0 && config.game_speed<=config.speed_limit){
                     console.log("increase Game speed")
                     config.game_speed++;
                     if(config.game_speed%7==0){
-                        this.min_gap+= (100 * config.game_speed/7 );
+                        this.min_gap+= (150 * config.game_speed/7 );
                     }
                 }
             
@@ -168,6 +166,11 @@ class GameScreen extends React.Component{
     //update Game loop
 
     updateGame(delta){
+
+        if(this.currentState==config.GAME_STATES.PAUSED){
+            return;
+        }
+
         this.moveCactus();
         this.ground.moveGround();   
         this.player.update(delta);

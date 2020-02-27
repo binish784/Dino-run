@@ -9,6 +9,7 @@ class MenuScreen extends Component{
     constructor(props){
         super(props);
         this.handleKeyPress=this.handleKeyPress.bind(this);
+
     }
 
     componentDidMount(){
@@ -28,19 +29,19 @@ class MenuScreen extends Component{
     render(){
         console.log("Menu Screen loaded");
         return <Stage height={config.height} width={config.width} >
-        <Text text="Bunny Hop" x={250} y={100} style={new TextStyle({
+        <Text text="Bunny Hop" x={config.width/2-70} y={config.height/2-50} style={new TextStyle({
             fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
             align:"center",
             fontSize:20,
             fill:"white",
         })}  />
-        <Text text="Press Enter to start" x={200} y={150} style={new TextStyle({
+        <Text text="Press Enter to start" x={config.width/2-100} y={config.height/2} style={new TextStyle({
             align:"center",
             fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
             fontSize:20,
             fill:"white",
         })}  />
-        <Text text="'P' to toggle Pause" x={250} y={200} style={new TextStyle({
+        <Text text="'P' to toggle Pause" x={config.width/2-70} y={config.height/2+50} style={new TextStyle({
             align:"center",
             fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
             fontSize:12,

@@ -1,10 +1,14 @@
+let height=400;
+let width=window.innerWidth-100;
+
 module.exports={
-    height:300,
-    width:600,
+    height,
+    width,
     gravity:1,
-    ground_level:200,
-    game_speed:3,
-    player_keys:{
+    ground_level:height-100,
+    game_speed:5,
+    speed_limit:13,
+    KEYS:{
         JUMP:32,
     },
     PLAYER_STATES:{
