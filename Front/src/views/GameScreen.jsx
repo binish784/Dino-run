@@ -30,6 +30,11 @@ class GameScreen extends React.Component{
         this.jumptime=50;
         this.jumpCounter=this.jumptime;
 
+        //Score
+        this.scoreText=new PIXI.Text(`Score : ${this.score}`,{fill:"white",fontSize:15});
+        this.scoreText.x=450;
+        this.scoreText.y=10;
+        this.container.addChild(this.scoreText);
 
         //Cactus 
         this.cactusTexture= PIXI.Texture.from("https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/coin.png");
@@ -147,7 +152,7 @@ class GameScreen extends React.Component{
             if(cactie.x<this.player.x && !cactie.counted){
                 this.score+=10;
                 cactie.counted=true;
-                console.log(`Score : ${this.score}`);
+                this.scoreText.text=(`Score : ${this.score}`);
             }
         })
     }
