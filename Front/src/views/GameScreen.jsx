@@ -5,13 +5,12 @@ const config = require("../config/config");
 import * as PIXI from "pixi.js";
 
 
-
 class GameScreen extends React.Component{
 
     constructor(props){
         super(props);
 
-
+        //initialize pixi app
         this.app= new PIXI.Application({width:config.width,height:config.height})
         this.pxRender=React.createRef();
         this.container= new PIXI.Container();
@@ -26,8 +25,7 @@ class GameScreen extends React.Component{
         //player props;
         this.player;
         this.playerTexture= PIXI.Texture.from("https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png");
-        this.jumping=false;
-        this.jumptime=50;
+        this.jump_vel=0;
         this.jumpCounter=this.jumptime;
 
         //Score
@@ -39,7 +37,7 @@ class GameScreen extends React.Component{
         //Cactus 
         this.cactusTexture= PIXI.Texture.from("https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/coin.png");
         this.cactus=[];
-       
+        
         // binding functions
         this.generateCactus=this.generateCactus.bind(this);
         this.updateGame=this.updateGame.bind(this);
@@ -48,8 +46,9 @@ class GameScreen extends React.Component{
 
         //controller
         document.addEventListener("keypress",(e)=>{
-            if(e.keyCode==32){
-                this.jumping=true;
+            if(e.keyCode==32 && this.player.currentState==config.PLAYER_STATES.GROUNDED){
+                this.jump_vel=14;
+                this.player.currentState=config.PLAYER_STATES.JUMPING;
             }
         })
         
@@ -66,27 +65,30 @@ class GameScreen extends React.Component{
     generatePlayer(){
         this.player=new PIXI.Sprite(this.playerTexture);
         this.player.x=150;
-        this.player.y=160; 
+        this.player.y=config.ground_level; 
         this.player.height=40;
         this.player.width=30;
+        this.player.currentState=config.PLAYER_STATES.GROUNDED;
         this.container.addChild(this.player);
     }
 
     //jump player
-    jumpPlayer(){
-        if(this.jumping){
-            this.jumpCounter--;
-            if(this.jumpCounter>=this.jumptime/2){
-                this.player.y-=this.gravity;
+    jumpPlayer(delta){
+        if(this.player.currentState==config.PLAYER_STATES.JUMPING){
+            this.player.y-= this.jump_vel * delta;
+            if(this.jump_vel>0){
+                this.jump_vel-=this.gravity *delta;
             }else{
-                this.player.y+=this.gravity; 
+                this.jump_vel-=this.gravity * delta/2;
+            }
+     
+            //ground Player 
+            if(this.player.y>=config.ground_level ){
+                this.player.y=config.ground_level;
+                this.player.currentState=config.PLAYER_STATES.GROUNDED
             }
         }
-        if(this.jumpCounter==0){
-            this.jumpCounter=this.jumptime;
-            this.jumping=false;
-        }
-
+     
     }
 
 
@@ -103,7 +105,7 @@ class GameScreen extends React.Component{
             let cactie=new PIXI.Sprite(this.cactusTexture);
             cactie.x= (i==0) ? this.getRndInteger(this.min_gap,500) 
                             : this.getRndInteger(this.cactus[i-1].x+this.min_gap,this.cactus[i-1].x+this.min_gap+(Math.random()*50));
-            cactie.y=180;
+            cactie.y=config.ground_level+ 20;
             cactie.height=20;
             cactie.counted=false;
             cactie.width=20;
@@ -114,9 +116,9 @@ class GameScreen extends React.Component{
 
 
     //update Game loop
-    updateGame(){
+    updateGame(delta){
         this.moveCactus();
-        this.jumpPlayer();
+        this.jumpPlayer(delta);
         this.checkCollision();
         this.countScore();
     }
