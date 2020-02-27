@@ -55,6 +55,9 @@ class GameScreen extends React.Component{
     }
 
     componentDidMount(){
+        if(this.props.history.action!= "PUSH"){
+            this.props.history.push("/");
+        }
         this.pxRender.current.appendChild(this.app.view);
         this.generateCactus();
         this.app.ticker.add(this.updateGame);

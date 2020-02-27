@@ -15,7 +15,7 @@ class DinoApp extends Component{
         console.log("Dino loaded");
         return <Switch>
                 <Route exact key={1} path="/" render={(props)=><MenuScreen {...props}/>} />
-                <Route exact key={2} path="/game" render={(props)=><GameScreen {...props}/>} />
+                <Route exact key={2} key="okey" path="/game" render={(props)=><GameScreen {...props}/>} />
             </Switch>
     }
 }
