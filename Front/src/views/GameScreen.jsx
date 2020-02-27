@@ -149,7 +149,7 @@ class GameScreen extends React.Component{
                     console.log("increase Game speed")
                     config.game_speed++;
                     if(config.game_speed%7==0){
-                        this.min_gap+= (150 * config.game_speed/7 );
+                        this.min_gap+= (190 * config.game_speed/7 );
                     }
                 }
             

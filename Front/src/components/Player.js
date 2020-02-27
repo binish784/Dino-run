@@ -15,6 +15,8 @@ class Player{
         this.jump_vel=0;
         this.currentState=config.PLAYER_STATES.GROUNDED;
 
+        this.gravity=config.gravity;
+
         //player body props
         this.body.x=init_x;
         this.body.y=init_y;
@@ -29,6 +31,10 @@ class Player{
         this.currentState=config.PLAYER_STATES.JUMPING;
     }
 
+    down(){
+        this.gravity=config.gravity+3;
+    }
+
     update(delta){
         this.inAir(delta);
     }
@@ -39,13 +45,14 @@ class Player{
             if(this.jump_vel>0){
                 this.jump_vel-=config.gravity *delta;
             }else{
-                this.jump_vel-=config.gravity * delta/2;
+                this.jump_vel-=this.gravity * delta/2;
             }
      
             //ground Player 
             if(this.body.y>=config.ground_level ){
                 this.body.y=config.ground_level;
                 this.currentState=config.PLAYER_STATES.GROUNDED
+                this.gravity=config.gravity;
             }
         }
      

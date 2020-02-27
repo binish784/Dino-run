@@ -9,7 +9,8 @@ module.exports={
     game_speed:5,
     speed_limit:13,
     KEYS:{
-        JUMP:32,
+        JUMP:[32,38],
+        DOWN:[40],
     },
     PLAYER_STATES:{
         GROUNDED:1,
