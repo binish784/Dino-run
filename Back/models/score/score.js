@@ -12,6 +12,10 @@ const scoreSchema = new Schema({
     username:{
         type:String,
         required:true,
+    },
+    time:{
+        type:Date,
+        default:Date.now()
     }
 })
 
