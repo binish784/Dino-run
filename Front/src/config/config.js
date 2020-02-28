@@ -7,7 +7,7 @@ module.exports={
     gravity:1,
     ground_level:height-100,
     game_speed:5,
-    speed_limit:13,
+    speed_limit:10,
     KEYS:{
         JUMP:[32,38],
         DOWN:[40],

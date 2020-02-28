@@ -2,3 +2,4 @@ Back/node_modules
 Back/package-lock.json
 Front/node_modules
 Front/package-lock.json
+Back/.env
