@@ -8,6 +8,8 @@ import {AppConsumer} from "@inlet/react-pixi";
 
 import DinoApp from "./layout/dino";
 
+import "./index.css";
+
 let hist=createBrowserHistory();
 
 class App extends React.Component{

@@ -1,0 +1,8 @@
+.scoreList{
+    list-style: none;
+}
+
+.scoreTitle{
+    font-size: 15;
+    padding-left: 50px;
+}
