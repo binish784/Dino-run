@@ -3,11 +3,11 @@ const scoreDB = require("../models/score/score.action");
 
 // Add Score
 
-exports.saveScore=(req,res)=>{
+exports.saveScore=async (req,res)=>{
     try{
-        const score = req.body.new_score;
+        const score = req.body.score;
         const username=req.body.username;
-        const new_score=res.send(scoreDB.add(score,username));
+        const new_score=await scoreDB.add(score,username);
         return res.send({success:true,data:new_score}).status(200);
 
     }catch(e){
@@ -16,7 +16,17 @@ exports.saveScore=(req,res)=>{
     }
 }
 
+//fetch all scores
 
+exports.getScore=async (req,res)=>{
+    try{
+        const scores= await scoreDB.fetchHigh();
+        return res.send({success:true,data:scores}).status(200);
+    }catch(e){
+        console.log(e);
+        return res.send({success:false,data:"Server Error"}).status(500);
+    }
+}
 
 // Page Not Found
 

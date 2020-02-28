@@ -6,6 +6,8 @@ const controller = require("../controller/score");
 
 router.post("/",controller.saveScore);
 
+router.get("/",controller.getScore);
+
 router.get("*",controller.notFound);
 
 

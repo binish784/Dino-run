@@ -21,7 +21,9 @@ app.use(express.json())
     .use(express.urlencoded({extended:false}))
     .use(routes);
 
-mongoose.connect(connection.create(),{ useNewUrlParser: true,useUnifiedTopology: true },(e)=>{
+const connectionString=connection.create();
+
+mongoose.connect(connectionString,{ useNewUrlParser: true,useUnifiedTopology: true },(e)=>{
     if(e){
         console.log("Unable to connect to bunnyHop Database");
     }else{
