@@ -21,7 +21,7 @@ class ScoreController{
 
     static async fetchHigh(){
         const query=[
-            {$sort:{"score":1}},
+            {$sort:{"score":-1}},
             {$limit:5},
         ]
         const high=await scoreDB.aggregate(query);
