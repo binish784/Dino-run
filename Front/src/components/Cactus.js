@@ -27,8 +27,8 @@ class Cactus{
     }
 
     //move cactus to the left
-    move(){
-        this.body.x-=config.game_speed;
+    move(speed){
+        this.body.x-=speed;
     }
 
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-var config = require("../config/config");
+const config = require("../config/config");
 
 import * as PIXI from "pixi.js";
 
@@ -28,11 +28,12 @@ class GameScreen extends React.Component{
         this.container= new PIXI.Container();
         this.app.stage.addChild(this.container);
 
-        //game properties
-        this.score=0; // game score
-        this.score_counter=5;
-        this.min_gap=350; // minimum gap between the obstacles
-        this.currentState=config.GAME_STATES.PAUSED;
+        this.state={
+            score:0,
+            min_gap:350,
+            currentState:config.GAME_STATES.PAUSED,
+            speed:config.game_speed
+        }
 
         //Player
         this.player=new Player(this.container,100,config.ground_level,40,30);
@@ -40,7 +41,7 @@ class GameScreen extends React.Component{
         this.ground=new Ground(this.container);
 
         //Score
-        this.scoreText=new PIXI.Text(`Score : ${this.score}`,{fill:"white",fontSize:15});
+        this.scoreText=new PIXI.Text(`Score : ${this.state.score}`,{fill:"white",fontSize:15});
         this.scoreText.x=config.width-150;
         this.scoreText.y=10;
         this.container.addChild(this.scoreText);
@@ -68,32 +69,6 @@ class GameScreen extends React.Component{
         this.controller=new Controller(this.player);
         
         
-        this.app.ticker.add(this.updateGame);
-    }
-
-    handleKeyPress(e){
-        //pause Controller
-        document.addEventListener("keypress",(e)=>{
-        if(e.keyCode==112){
-            this.togglePause();
-        }
-        if(e.keyCode==32 && this.currentState==config.GAME_STATES.GAMEOVER){
-            this.props.history.push({
-                pathname:"/gameover",
-                state:{score:this.score}
-            });
-        }
-        })
-    }
-
-    togglePause(){
-        if(this.currentState==config.GAME_STATES.PAUSED){
-            this.currentState=config.GAME_STATES.RUNNING;
-            this.pausedText.hideText();
-        }else if(this.currentState==config.GAME_STATES.RUNNING){
-            this.currentState=config.GAME_STATES.PAUSED;
-            this.pausedText.showText();
-        }
     }
 
 
@@ -101,14 +76,53 @@ class GameScreen extends React.Component{
         if(this.props.history.action!= "PUSH"){
             this.props.history.push("/");
         }
+
+        this.setState({
+            score:0, // game score
+            min_gap:350, // minimum gap between the obstacles
+            currentState:config.GAME_STATES.PAUSED,
+            speed:config.game_speed
+        })
+
+
         this.pxRender.current.appendChild(this.app.view);
         this.generateCactus();
         document.addEventListener("keypress",this.handleKeyPress);
+        this.app.ticker.add(this.updateGame);
     }
 
     componentWillUnmount(){
+        this.app.ticker.remove(this.updateGame);
         document.removeEventListener("keypress",this.handleKeyPress);
     }
+
+    handleKeyPress(e){
+        if(e.keyCode==112){
+            this.togglePause();
+        } else if(e.keyCode==32 && this.state.currentState==config.GAME_STATES.GAMEOVER){
+            this.props.history.push({
+                pathname:"/gameover",
+                state:{score:this.state.score}
+            });
+        }
+        
+    }
+
+    togglePause(){
+        if(this.state.currentState==config.GAME_STATES.PAUSED){
+            this.setState({
+                currentState:config.GAME_STATES.RUNNING,
+            })
+            this.pausedText.hideText();
+        }else if(this.state.currentState==config.GAME_STATES.RUNNING){
+            this.setState({
+                currentState:config.GAME_STATES.PAUSED,
+            })
+            this.pausedText.showText();
+        }
+    }
+
+
 
     //generate Cactus at random position (with minimum gap)
 
@@ -116,8 +130,8 @@ class GameScreen extends React.Component{
 
         for(let i=0;i<5;i++){
 
-            let init_x= (i==0) ? utils.getRandomNumber(300+this.min_gap,500) 
-                            : utils.getRandomNumber(this.cactus[i-1].body.x+this.min_gap,this.cactus[i-1].body.x+this.min_gap+(Math.random()*50));
+            let init_x= (i==0) ? utils.getRandomNumber(300+this.state.min_gap,500) 
+                            : utils.getRandomNumber(this.cactus[i-1].body.x+this.state.min_gap,this.cactus[i-1].body.x+this.state.min_gap+(Math.random()*50));
             let init_y=config.ground_level+ 20;
             let cactie= new Cactus(this.container,init_x,init_y,20,20);
             this.cactus.push(cactie);
@@ -135,14 +149,16 @@ class GameScreen extends React.Component{
                 cactie.body.x + cactie.body.width > this.player.body.x &&
                 cactie.body.y < this.player.body.y + this.player.body.height &&
                 cactie.body.y + cactie.body.height > this.player.body.y) {
-                    this.currentState=config.GAME_STATES.GAMEOVER;
+                    this.setState({
+                        currentState:config.GAME_STATES.GAMEOVER
+                    })
                     // this.app.ticker.remove(this.updateGame);
                 }
             
             //recycle the cactus once pass the screen
             if(cactie.body.x + cactie.body.width <0){
                     let prev_post= (i==0) ? this.cactus[this.cactus.length-1].body.x : this.cactus[i-1].body.x;
-                    cactie.body.x= utils.getRandomNumber(prev_post+this.min_gap,prev_post+Math.floor(this.min_gap+Math.random()*300));
+                    cactie.body.x= utils.getRandomNumber(prev_post+this.state.min_gap,prev_post+Math.floor(this.state.min_gap+Math.random()*300));
                     cactie.counted=false;
                 }
         })
@@ -156,16 +172,26 @@ class GameScreen extends React.Component{
         //count score for jumping
         this.cactus.forEach((cactie)=>{
             if(cactie.body.x<this.player.body.x && !cactie.counted){
-                this.score+=10;
+                let new_score=this.state.score+10
+                this.setState({
+                    score:new_score
+                })
                 cactie.counted=true;
-                this.scoreText.text=(`Score : ${this.score}`);
+                this.scoreText.text=(`Score : ${this.state.score}`);
             
                 //increase game_speed
-                if(this.score%20==0 && config.game_speed<=config.speed_limit){
-                    console.log("increase Game speed")
-                    config.game_speed++;
-                    if(config.game_speed%7==0){
-                        this.min_gap+= (190 * config.game_speed/7 );
+                if(this.state.score%20==0 && this.state.speed<=config.speed_limit){
+                    // console.log("increase Game speed")
+                    let speed=this.state.speed+1;
+                    this.setState({
+                        speed
+                    })
+                    console.log(this.state.speed);
+                    if(this.state.speed%7==0){
+                        let min_gap=this.state.min_gap + (190 * this.state.speed/7 )
+                        this.setState({
+                            min_gap
+                        })
                     }
                 }
             
@@ -179,7 +205,7 @@ class GameScreen extends React.Component{
 
     moveCactus(){
         for(let i=0;i<this.cactus.length;i++){
-            this.cactus[i].move();
+            this.cactus[i].move(this.state.speed);
         }
     }
 
@@ -187,18 +213,18 @@ class GameScreen extends React.Component{
 
     updateGame(delta){
 
-        if(this.currentState==config.GAME_STATES.PAUSED){
+        if(this.state.currentState==config.GAME_STATES.PAUSED){
             return;
         }
         
-        if(this.currentState==config.GAME_STATES.GAMEOVER){
+        if(this.state.currentState==config.GAME_STATES.GAMEOVER){
             this.gameOverText.showText();
             this.continueText.showText();
             return;
         }
 
         this.moveCactus();
-        this.ground.moveGround();   
+        this.ground.moveGround(this.state.speed);   
         this.player.update(delta);
         this.checkCollision();
         this.countScore();

@@ -27,6 +27,7 @@ class MenuScreen extends Component{
         if(this.props.history.action!= "PUSH"){
             this.props.history.push("/");
         }
+        console.log("Game OVer at",this.props.location.state.score);
         this.setState({score:this.props.location.state.score});
 
     }
@@ -42,7 +43,7 @@ class MenuScreen extends Component{
     }
 
     handleKeyPress(e){
-        if(e.keyCode==32){
+        if(e.keyCode==32 && this.state.scoreAdded){
             this.props.history.push("/");
         }
     }

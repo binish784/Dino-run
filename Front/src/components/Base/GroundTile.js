@@ -24,8 +24,8 @@ class GroundTile{
     }
 
     //move tile to the left
-    move(){
-        this.body.x-= (config.game_speed/2);
+    move(speed){
+        this.body.x-= (speed/2);
     }
 
     moveTo(x){

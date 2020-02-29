@@ -25,12 +25,12 @@ class Ground{
         
     }
 
-    moveGround(){
+    moveGround(speed){
 
         //move tile
         this.tiles.forEach((tile,i)=>{
 
-            tile.move();
+            tile.move(speed);
 
             //recycle tiles
             if(tile.body.x + tile.body.width <0){

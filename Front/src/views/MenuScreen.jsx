@@ -10,6 +10,7 @@ class MenuScreen extends Component{
     constructor(props){
         super(props);
         this.handleKeyPress=this.handleKeyPress.bind(this);
+        this.game=React.createRef();
         
     }
 
@@ -22,7 +23,7 @@ class MenuScreen extends Component{
     }
 
     handleKeyPress(e){
-        if(e.key==" " || e.key=="Enter"){
+        if(e.key=="Enter"){
             this.props.history.push("/game");
         }
     }
@@ -31,7 +32,7 @@ class MenuScreen extends Component{
 
         return <div>
         
-        <Stage height={config.height} width={config.width} >
+        <Stage ref={this.game} height={config.height} width={config.width} >
             <Text text="Bunny Hop" x={config.width/2-70} y={config.height/2-50} style={new TextStyle({
                 fontFamily: '"Source Sans Pro", Helvetica, sans-serif',
                 align:"center",
@@ -53,7 +54,6 @@ class MenuScreen extends Component{
         </Stage>
             
         </div>
-
 
     }
 }
