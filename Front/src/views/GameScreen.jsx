@@ -53,6 +53,8 @@ class GameScreen extends React.Component{
         
         //game over Text
         this.gameOverText=new customText(this.container,200,150,"Game Over","white",15);
+        this.continueText=new customText(this.container,200,200,"press space to continue","white",15);
+        this.continueText.hideText();
         this.gameOverText.hideText();
         
         // binding functions
@@ -60,18 +62,28 @@ class GameScreen extends React.Component{
         this.updateGame=this.updateGame.bind(this);
         this.checkCollision=this.checkCollision.bind(this);
         this.togglePause=this.togglePause.bind(this);
+        this.handleKeyPress=this.handleKeyPress.bind(this);
 
         //controller
         this.controller=new Controller(this.player);
         
+        
+        this.app.ticker.add(this.updateGame);
+    }
+
+    handleKeyPress(e){
         //pause Controller
         document.addEventListener("keypress",(e)=>{
-            if(e.keyCode==112){
-                this.togglePause();
-            }
+        if(e.keyCode==112){
+            this.togglePause();
+        }
+        if(e.keyCode==32 && this.currentState==config.GAME_STATES.GAMEOVER){
+            this.props.history.push({
+                pathname:"/gameover",
+                state:{score:this.score}
+            });
+        }
         })
-
-        this.app.ticker.add(this.updateGame);
     }
 
     togglePause(){
@@ -91,8 +103,12 @@ class GameScreen extends React.Component{
         }
         this.pxRender.current.appendChild(this.app.view);
         this.generateCactus();
+        document.addEventListener("keypress",this.handleKeyPress);
     }
 
+    componentWillUnmount(){
+        document.removeEventListener("keypress",this.handleKeyPress);
+    }
 
     //generate Cactus at random position (with minimum gap)
 
@@ -174,9 +190,10 @@ class GameScreen extends React.Component{
         if(this.currentState==config.GAME_STATES.PAUSED){
             return;
         }
-
+        
         if(this.currentState==config.GAME_STATES.GAMEOVER){
             this.gameOverText.showText();
+            this.continueText.showText();
             return;
         }
 

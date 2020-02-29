@@ -7,7 +7,12 @@ class ScoreController{
     static async add(score,username){
         const new_score= new scoreDB({score,username});
         await new_score.save();
-        return new_score;
+        const query=[
+            {$match:{"score":{$gte:score}}},
+            {$group:{"_id":null,"position":{$sum:1}}},
+        ]
+        var response=scoreDB.aggregate(query);
+        return response;
     }
 
     // return all scores

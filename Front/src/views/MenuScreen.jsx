@@ -4,55 +4,17 @@ import { TextStyle } from "pixi.js";
 
 const config = require("../config/config");
 
-const service=require("../services/ScoreService");
-
-class ScoreList extends Component{
-    constructor(props){
-        super(props);
-        this.score_list=this.props.scores.map(this.createList);
-    }
-
-    createList(score){
-        return <li key={score.key}>{score.username} : {score.score}</li>
-    }
-
-    render(){
-        return <div>
-            <p className="scoreTitle">Top Scores</p>
-            <ul className="scoreList">
-                {this.score_list}
-            </ul>
-        </div>
-    }
-}
-
 
 class MenuScreen extends Component{
 
     constructor(props){
         super(props);
         this.handleKeyPress=this.handleKeyPress.bind(this);
-        this.state={
-            scores:[]
-        }
+        
     }
 
     async componentDidMount(){
         document.addEventListener("keypress",this.handleKeyPress);
-        const fetchedData=await service.fetchHigh();
-        if(fetchedData.success){
-            let data=fetchedData.data;
-            let score_list=[];
-            data.forEach((score)=>{
-                score_list.push({"key":score._id,"score":score.score,"username":score.username});
-            })
-            console.log(score_list);
-            this.setState({
-                scores:score_list
-            })
-        }else{
-            console.log("Fetching Scores Failed");
-        }
     }
 
     componentWillUnmount(){
@@ -66,8 +28,6 @@ class MenuScreen extends Component{
     }
 
     render(){
-        console.log("Menu Screen loaded");
-
 
         return <div>
         
@@ -92,11 +52,6 @@ class MenuScreen extends Component{
             })}  />
         </Stage>
             
-        <br></br>
-        <br></br>
-            
-        {this.state.scores.length==0 ?  <p className="scoreTitle"> Scores Loading</p> : <ScoreList scores={this.state.scores} />  }
-        
         </div>
 
 

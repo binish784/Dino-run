@@ -7,8 +7,8 @@ exports.saveScore=async (req,res)=>{
     try{
         const score = req.body.score;
         const username=req.body.username;
-        const new_score=await scoreDB.add(score,username);
-        return res.send({success:true,data:new_score}).status(200);
+        const response=await scoreDB.add(score,username);
+        return res.send({success:true,data:response}).status(200);
 
     }catch(e){
         console.log(e);
