@@ -5,6 +5,7 @@ class customText{
         this.container=container;
         this.color=color;
         this.size= size ;
+        
         this.body= new PIXI.Text(text,{fill:color,fontSize:size});
         this.body.x=x;
         this.body.y=y;
@@ -22,6 +23,10 @@ class customText{
 
     showText(){
         this.container.addChild(this.body);
+    }
+
+    changeText(new_text){
+        this.body.text=new_text;
     }
 
 }

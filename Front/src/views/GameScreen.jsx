@@ -41,11 +41,8 @@ class GameScreen extends React.Component{
         this.ground=new Ground(this.container);
 
         //Score
-        this.scoreText=new PIXI.Text(`Score : ${this.state.score}`,{fill:"white",fontSize:15});
-        this.scoreText.x=config.width-150;
-        this.scoreText.y=10;
-        this.container.addChild(this.scoreText);
-
+        this.scoreText=new customText(this.container,config.width-150,10,`Score : ${this.state.score}`,"white",15);
+        
         //Cactus 
         this.cactus=[];
 
@@ -177,7 +174,7 @@ class GameScreen extends React.Component{
                     score:new_score
                 })
                 cactie.counted=true;
-                this.scoreText.text=(`Score : ${this.state.score}`);
+                this.scoreText.changeText(`Score : ${this.state.score}`);
             
                 //increase game_speed
                 if(this.state.score%20==0 && this.state.speed<=config.speed_limit){
@@ -186,9 +183,8 @@ class GameScreen extends React.Component{
                     this.setState({
                         speed
                     })
-                    console.log(this.state.speed);
                     if(this.state.speed%7==0){
-                        let min_gap=this.state.min_gap + (190 * this.state.speed/7 )
+                        let min_gap=this.state.min_gap + (120 * this.state.speed/7 )
                         this.setState({
                             min_gap
                         })
