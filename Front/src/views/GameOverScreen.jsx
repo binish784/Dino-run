@@ -26,12 +26,11 @@ class MenuScreen extends Component{
     }
 
     async componentDidMount(){
-        document.addEventListener("keypress",this.handleKeyPress);
+        
         if(this.props.history.action!= "PUSH"){
             this.props.history.push("/");
         }
 
-        console.log("Game OVer at",this.props.location.state.score);
         this.setState({score:this.props.location.state.score});
 
         const fetchedData=await service.fetchHigh();
@@ -50,7 +49,8 @@ class MenuScreen extends Component{
             })
         }
     
-
+        document.addEventListener("keypress",this.handleKeyPress);
+        
     }
 
     componentWillUnmount(){

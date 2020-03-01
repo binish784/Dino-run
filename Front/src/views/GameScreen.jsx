@@ -36,7 +36,7 @@ class GameScreen extends React.Component{
         }
 
         //Player
-        this.player=new Player(this.container,100,config.ground_level,40,30);
+        this.player=new Player(this.container,100,null,40,30);
 
         this.ground=new Ground(this.container);
 
@@ -129,7 +129,7 @@ class GameScreen extends React.Component{
 
             let init_x= (i==0) ? utils.getRandomNumber(300+this.state.min_gap,500) 
                             : utils.getRandomNumber(this.cactus[i-1].body.x+this.state.min_gap,this.cactus[i-1].body.x+this.state.min_gap+(Math.random()*50));
-            let init_y=config.ground_level+ 20;
+            let init_y=config.ground_level-20;
             let cactie= new Cactus(this.container,init_x,init_y,20,20);
             this.cactus.push(cactie);
         }
@@ -139,9 +139,25 @@ class GameScreen extends React.Component{
     //checks for collision and recycles the cactus
     checkCollision(){
      
+        //ground collision Detection
+        let tile_offset=40;
+        this.ground.tiles.forEach((tile)=>{
+        if (tile.body.x < this.player.body.x + this.player.body.width &&
+            tile.body.x + tile.body.width > this.player.body.x &&
+            tile.body.y <= this.player.body.y + this.player.body.height - tile_offset) {
+                //grounded
+                this.player.body.y=this.player.ground_level;
+                this.player.currentState=config.PLAYER_STATES.GROUNDED
+                this.player.gravity=config.gravity;
+
+            }
+            
+        })
+
+        
         this.cactus.forEach((cactie,i)=>{
 
-            //check for collision detection
+            //check for collision detection with cactus
             if (cactie.body.x < this.player.body.x + this.player.body.width &&
                 cactie.body.x + cactie.body.width > this.player.body.x &&
                 cactie.body.y < this.player.body.y + this.player.body.height &&
@@ -149,15 +165,16 @@ class GameScreen extends React.Component{
                     this.setState({
                         currentState:config.GAME_STATES.GAMEOVER
                     })
-                    // this.app.ticker.remove(this.updateGame);
                 }
+
+            
             
             //recycle the cactus once pass the screen
             if(cactie.body.x + cactie.body.width <0){
-                    let default_y=config.ground_level+20;
-                    let up_chance=0.5; // chance the cactus will be above ground
+                    let default_y=config.ground_level-20;
+                    let up_chance=config.up_chance; // chance the cactus will be above ground
                     if(Math.random()<=up_chance){
-                        default_y=config.ground_level;
+                        default_y=config.ground_level-50;
                     }
                     let prev_post= (i==0) ? this.cactus[this.cactus.length-1].body.x : this.cactus[i-1].body.x;
                     cactie.body.x= utils.getRandomNumber(prev_post+this.state.min_gap,prev_post+Math.floor(this.state.min_gap+Math.random()*300));

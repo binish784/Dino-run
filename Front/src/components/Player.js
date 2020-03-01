@@ -15,15 +15,42 @@ class Player{
         this.jump_vel=0;
         this.currentState=config.PLAYER_STATES.GROUNDED;
 
+        this.shrinked=false;
+
         this.gravity=config.gravity;
+        
+        this.ground_level=config.ground_level-height;
+
+        this.def_height=height;
+        this.def_width=width;
 
         //player body props
         this.body.x=init_x;
-        this.body.y=init_y;
+        this.body.y=init_y || config.ground_level-height;
         this.body.height=height;
         this.body.width=width;
-        
         this.container.addChild(this.body);
+
+    }
+
+    shrinkActive(){
+        this.shrinked=true;
+    }
+
+    grow(){
+        this.shrinked=false;
+    }
+
+    handleShrink(){
+        if(this.shrinked){
+            this.body.height=this.def_height/2;
+            this.body.width=this.def_width/2;
+        }else{
+            this.body.height=this.def_height;
+            this.body.width=this.def_width;
+        }
+        this.body.y=this.body.y+this.body.height;
+        this.ground_level=config.ground_level-this.body.height;
     }
 
     jump(){
@@ -37,6 +64,9 @@ class Player{
 
     update(delta){
         this.inAir(delta);
+        if(this.currentState==config.PLAYER_STATES.GROUNDED){
+            this.handleShrink();
+        }
     }
 
     inAir(delta){
@@ -48,12 +78,7 @@ class Player{
                 this.jump_vel-=this.gravity * delta/2;
             }
      
-            //ground Player 
-            if(this.body.y>=config.ground_level ){
-                this.body.y=config.ground_level;
-                this.currentState=config.PLAYER_STATES.GROUNDED
-                this.gravity=config.gravity;
-            }
+            
         }
      
     }

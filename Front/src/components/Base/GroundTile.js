@@ -16,7 +16,7 @@ class GroundTile{
         //sprite properties
         this.body=new PIXI.Sprite(this.texture);
         this.body.x=x;
-        this.body.y=config.ground_level;
+        this.body.y=config.ground_level-40;
         this.body.height=100;
         this.body.width=100;
         
