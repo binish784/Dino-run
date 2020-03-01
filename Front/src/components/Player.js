@@ -77,8 +77,7 @@ class Player{
             }else{
                 this.jump_vel-=this.gravity * delta/2;
             }
-     
-            
+
         }
      
     }

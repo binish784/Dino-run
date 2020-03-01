@@ -15,7 +15,8 @@ module.exports={
     },
     PLAYER_STATES:{
         GROUNDED:1,
-        JUMPING:2
+        JUMPING:2,
+        CROUCHED:3
     },
     GAME_STATES:{
         RUNNING:1,
