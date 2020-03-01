@@ -26,6 +26,8 @@ class Cactus{
         this.container.addChild(this.body)
     }
 
+
+
     //move cactus to the left
     move(speed){
         this.body.x-=speed;

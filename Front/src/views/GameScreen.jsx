@@ -154,8 +154,14 @@ class GameScreen extends React.Component{
             
             //recycle the cactus once pass the screen
             if(cactie.body.x + cactie.body.width <0){
+                    let default_y=config.ground_level+20;
+                    let up_chance=0.5; // chance the cactus will be above ground
+                    if(Math.random()<=up_chance){
+                        default_y=config.ground_level;
+                    }
                     let prev_post= (i==0) ? this.cactus[this.cactus.length-1].body.x : this.cactus[i-1].body.x;
                     cactie.body.x= utils.getRandomNumber(prev_post+this.state.min_gap,prev_post+Math.floor(this.state.min_gap+Math.random()*300));
+                    cactie.body.y=default_y;
                     cactie.counted=false;
                 }
         })

@@ -2,6 +2,7 @@ import React,{Component} from "react";
 
 const config = require("../config/config");
 
+import ScoreList from "../layout/component/ScoreList";
 import service from "../services/ScoreService";
 
 class MenuScreen extends Component{
@@ -14,6 +15,8 @@ class MenuScreen extends Component{
             message:"",
             position:null,
             score:0,
+            scores:[],
+            scoreMessage:"Score Loading"
         }
         this.handleChange=this.handleChange.bind(this);
         this.handleSubmit=this.handleSubmit.bind(this);
@@ -22,13 +25,31 @@ class MenuScreen extends Component{
 
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         document.addEventListener("keypress",this.handleKeyPress);
         if(this.props.history.action!= "PUSH"){
             this.props.history.push("/");
         }
+
         console.log("Game OVer at",this.props.location.state.score);
         this.setState({score:this.props.location.state.score});
+
+        const fetchedData=await service.fetchHigh();
+        if(fetchedData.success){
+            let data=fetchedData.data;
+            let score_list=[];
+            data.forEach((score)=>{
+                score_list.push({"key":score._id,"score":score.score,"username":score.username});
+            })
+            this.setState({
+                scores:score_list
+            })
+        }else{
+            this.setState({
+                message:"Loading Failed"
+            })
+        }
+    
 
     }
 
@@ -50,6 +71,9 @@ class MenuScreen extends Component{
 
     async handleSubmit(e){
         e.preventDefault();
+        this.setState({
+            message:"Submitting Score"
+        })
         if(this.state.username.length!=0){
             const response= await service.addScore(this.state.username,this.state.score);
             if(response.success){
@@ -86,6 +110,13 @@ class MenuScreen extends Component{
                     
                     {this.state.message}
                     
+
+                    <br></br>
+                    <br></br>
+                        
+                    {this.state.scores.length==0 ?  <p className="scoreTitle">{this.state.scoreMessage}</p> : <ScoreList scores={this.state.scores} />  }
+                    
+
                 </div>
        
     }
