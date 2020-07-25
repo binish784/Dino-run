@@ -7,11 +7,12 @@ class ScoreList extends Component{
     }
 
     createList(score){
-        return <li key={score.key}>{score.username} : {score.score}</li>
+        console.log(score.key);
+        return <li style={{backgroundColor:"darkseagreen"}}>{score.username} : {score.score}</li>
     }
 
     render(){
-        return <div>
+        return <div className="scoreBoard">
             <p className="scoreTitle">Top Scores</p>
             <ul className="scoreList">
                 {this.score_list}

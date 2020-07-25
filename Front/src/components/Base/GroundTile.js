@@ -12,7 +12,6 @@ class GroundTile{
         
         this.container=container;
         
-        
         //sprite properties
         this.body=new PIXI.Sprite(this.texture);
         this.body.x=x;
@@ -20,6 +19,8 @@ class GroundTile{
         this.body.height=100;
         this.body.width=100;
         
+        this.tile_offset=40;
+
         this.container.addChild(this.body)
     }
 

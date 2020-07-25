@@ -9,7 +9,7 @@ class Cactus{
     constructor(container,init_x,init_y,height,width){
         
         this.texture=PIXI.Texture.from("https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/coin.png");
-        
+        // this.texture=PIXI.Texture.from("src/assets/images/spike.png");
         this.container=container;
         
         

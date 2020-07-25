@@ -1,14 +1,19 @@
-let height=400;
-let width=window.innerWidth-100;
+let height=300;
+let width;
+if(window.innerWidth>400){
+    width=650;
+}else{
+    width=window.innerWidth;
+}
 
 module.exports={
     height,
     width,
     gravity:1,
-    ground_level:height-100,
-    game_speed:5,
-    speed_limit:15,
-    up_chance:0.3,
+    ground_level:height-50,
+    game_speed:5, //initial game speed
+    speed_limit:15, //the speed limit for player
+    up_chance:0.3,//chance that enemy will be upwards
     KEYS:{
         JUMP:[32,38],
         DOWN:[40],

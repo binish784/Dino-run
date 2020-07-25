@@ -1,8 +1,21 @@
 .scoreList{
     list-style: none;
+    width: 100%;
+    padding:0px;
+    margin: 0px;
 }
 
+
 .scoreTitle{
+    background-color: cornflowerblue;
+    margin:0;
+    padding: 5px 0px;
     font-size: 15;
-    padding-left: 50px;
+}
+
+.scoreBoard{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin-bottom: 0;
 }

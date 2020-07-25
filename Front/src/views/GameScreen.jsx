@@ -22,7 +22,7 @@ class GameScreen extends React.Component{
         super(props);
 
         //initialize pixi app
-        this.app= new PIXI.Application({width:config.width,height:config.height})
+        this.app= new PIXI.Application({width:config.width,height:config.height,backgroundColor:0x83c6eb})
        
         this.pxRender=React.createRef();
         this.container= new PIXI.Container();
@@ -41,17 +41,17 @@ class GameScreen extends React.Component{
         this.ground=new Ground(this.container);
 
         //Score
-        this.scoreText=new customText(this.container,config.width-150,10,`Score : ${this.state.score}`,"white",15);
+        this.scoreText=new customText(this.container,config.width-150,10,`Score : ${this.state.score}`,"black",15);
         
         //Cactus 
         this.cactus=[];
 
         //paused Text
-        this.pausedText=new customText(this.container,200,150,"Paused","white",15);
+        this.pausedText=new customText(this.container,200,150,"Paused","black",15);
         
         //game over Text
-        this.gameOverText=new customText(this.container,200,150,"Game Over","white",15);
-        this.continueText=new customText(this.container,200,200,"press space to continue","white",15);
+        this.gameOverText=new customText(this.container,200,150,"Game Over","black",15);
+        this.continueText=new customText(this.container,200,200,"press space to continue","black",15);
         this.continueText.hideText();
         this.gameOverText.hideText();
         
@@ -140,11 +140,10 @@ class GameScreen extends React.Component{
     checkCollision(){
      
         //ground collision Detection
-        let tile_offset=40;
         this.ground.tiles.forEach((tile)=>{
         if (tile.body.x < this.player.body.x + this.player.body.width &&
             tile.body.x + tile.body.width > this.player.body.x &&
-            tile.body.y <= this.player.body.y + this.player.body.height - tile_offset) {
+            tile.body.y <= this.player.body.y + this.player.body.height - tile.tile_offset) {
                 //grounded
                 this.player.body.y=this.player.ground_level;
                 this.player.currentState=config.PLAYER_STATES.GROUNDED

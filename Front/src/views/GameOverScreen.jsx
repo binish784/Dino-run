@@ -87,37 +87,52 @@ class MenuScreen extends Component{
 
     render(){
         
-       return   <div>
-                    {this.state.scoreAdded ? 
-                    <div>Your Position in score board : {this.state.position}
-                    <br></br>
-                    <br></br>
-                        Press Space for Menu
-                    </div> : 
+       return   <div style={{
+                        height:config.height,
+                        width:config.width,
+                        backgroundColor:"skyblue",
+                        color:"black",
+                        textAlign:"center",
+                        position:"relative"
+                    }}>
+                    
+                    
+                    <div style={{
+                        paddingTop:"0.5rem"
+                    }}>
+                        {this.state.scoreAdded ? 
+                            <p>Your Position in score board : {this.state.position}</p>
+                        :
+                            <p>Place your mark in the Score Board</p> 
+                        }
+                    </div>
+
                     <div>
-                        <form onSubmit={this.handleSubmit}>
-                        Place your mark in the Score Board
-                        <br></br>
-                        <br></br>
-                        <input type="text" onChange={this.handleChange} required id="username" placeholder="Enter Your Username"></input>
-                        <input type="submit" id="username"></input>
-                        <br></br>
-                        <br></br>
-                        {this.state.username} : {this.state.score}
-                    </form>
-                    
-                    </div>}
-                    
-                    {this.state.message}
-                    
+                    {this.state.scoreAdded ? 
+                            <p>Press Space for Menu</p>
+                        :
+                            <form onSubmit={this.handleSubmit}>
+                            <input type="text" onChange={this.handleChange} required id="username" placeholder="Enter Your Username"></input>
+                            <input type="submit" id="username"></input>
+                            <br></br>
+                            {this.state.username} : {this.state.score}
+                            </form>
+                        }
+                    </div>
 
-                    <br></br>
-                    <br></br>
+                    <div>
+                        {this.state.message}
+                    </div>
+
+                    <div>
+                        {this.state.scores.length==0 ?  
+                            <p className="scoreTitle">{this.state.scoreMessage}</p> : 
+                            <ScoreList scores={this.state.scores} />  }
+                    </div>
+                    
                         
-                    {this.state.scores.length==0 ?  <p className="scoreTitle">{this.state.scoreMessage}</p> : <ScoreList scores={this.state.scores} />  }
-                    
 
-                </div>
+                </div>    
        
     }
 }
